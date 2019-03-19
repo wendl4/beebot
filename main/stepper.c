@@ -31,7 +31,7 @@ void writeSequence() {
 	for (int sequenceNo = 0; sequenceNo < sequenceLength; sequenceNo++) {
 		for (int i = 0; i < 4; i++) {
 			gpio_set_level(PINS1[i], FULL_STEP_MOTOR_SEQUENCE[sequenceNo][i]);
-			gpio_set_level(PINS2[i], FULL_STEP_MOTOR_SEQUENCE[4-sequenceNo][4-i]);
+			gpio_set_level(PINS2[i], FULL_STEP_MOTOR_SEQUENCE[sequenceLength-sequenceNo][sequenceLength-i]);
 		}
 		vTaskDelay(10 / portTICK_PERIOD_MS);
 	}
