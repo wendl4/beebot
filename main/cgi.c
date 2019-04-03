@@ -1,5 +1,6 @@
 #include <libesphttpd/esp.h>
 #include "cgi.h"
+#include "perform.h"
 #include "nvs_flash.h"
 #include "stepper.h"
 
@@ -59,6 +60,6 @@ CgiStatus ICACHE_FLASH_ATTR cgiSendSteps(HttpdConnData *connData) {
 	char steps[128];
 	httpdFindArg(connData->post.buff, "steps", steps, sizeof(steps));
 	printf("Steps -> %s \n", steps);
-	makeStep();
+	prepair_program(steps);
 	return HTTPD_CGI_DONE;
 }

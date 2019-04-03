@@ -4,6 +4,8 @@
 #include "esp_system.h"
 #include "stepper.h"
 
+int dir[2] = {0,0};
+
 const bool FULL_STEP_MOTOR_SEQUENCE[][4] = {
 		{ 1,  0,  1,  0 },
 		{ 0,  1,  1,  0 },
@@ -26,12 +28,21 @@ const bool HALF_STEP_MOTOR_SEQUENCE[][4] = {
 const int PINS1[4] = {GPIO_NUM_16,GPIO_NUM_4,GPIO_NUM_0,GPIO_NUM_2};
 const int PINS2[4] = {GPIO_NUM_17,GPIO_NUM_5,GPIO_NUM_18,GPIO_NUM_19};
 
+void setDir(int m1,int m2) {
+	dir[0] = m1; //pins1
+	dir[1] = m2; //pins2
+}
+
 void writeSequence() {
 	int sequenceLength = sizeof(FULL_STEP_MOTOR_SEQUENCE) / sizeof(FULL_STEP_MOTOR_SEQUENCE[0]);
 	for (int sequenceNo = 0; sequenceNo < sequenceLength; sequenceNo++) {
 		for (int i = 0; i < 4; i++) {
-			gpio_set_level(PINS1[i], FULL_STEP_MOTOR_SEQUENCE[sequenceNo][i]);
-			gpio_set_level(PINS2[i], FULL_STEP_MOTOR_SEQUENCE[sequenceLength-sequenceNo][sequenceLength-i]);
+			if (dir[0] == -1) gpio_set_level(PINS1[i], FULL_STEP_MOTOR_SEQUENCE[sequenceLength-sequenceNo][sequenceLength-i]);
+			else gpio_set_level(PINS1[i], FULL_STEP_MOTOR_SEQUENCE[sequenceNo][i]);
+
+			if (dir[1] == 1) gpio_set_level(PINS2[i], FULL_STEP_MOTOR_SEQUENCE[sequenceNo][i]);
+			else gpio_set_level(PINS2[i], FULL_STEP_MOTOR_SEQUENCE[sequenceLength-sequenceNo][sequenceLength - i]);
+
 		}
 		vTaskDelay(10 / portTICK_PERIOD_MS);
 	}
@@ -45,9 +56,6 @@ void initStepper() {
 }
 
 void makeStep() {
-
-    int sequenceNo = 0;
-
     for (int i = 0; i < 512; i++) {
         writeSequence();
     }

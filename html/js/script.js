@@ -15,19 +15,20 @@ function sendSteps(inputSteps) {
 }
 
 $(document).ready(function(){
-	$( ".down-arrow" ).click(function() {
-		steps += "d";
-	});
 	$( ".up-arrow" ).click(function() {
-		steps += "u";
+		steps += "1";
 	});
-	$( ".left-arrow" ).click(function() {
-		steps += "l";
+	$( ".down-arrow" ).click(function() {
+		steps += "2";
 	});
 	$( ".right-arrow" ).click(function() {
-		steps += "r";
+		steps += "3";
+	});
+	$( ".left-arrow" ).click(function() {
+		steps += "4";
 	});
 	$( ".go-button" ).click(function() {
 		sendSteps(steps);
+		steps = "";
 	});
 });
