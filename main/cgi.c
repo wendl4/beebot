@@ -4,7 +4,6 @@
 #include "nvs_flash.h"
 #include "stepper.h"
 
-
 //Cgi that turns the LED on or off according to the 'led' param in the POST data
 CgiStatus ICACHE_FLASH_ATTR cgiParseWifiInfo(HttpdConnData *connData) {
 	char ssid[128];
