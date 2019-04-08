@@ -27,6 +27,7 @@
 
 #include "stepper.h"
 #include "cgi.h"
+#include <mdns.h>
 
 #define BEEBOT_SSID               CONFIG_ESP_WIFI_SSID
 #define BEEBOT_WIFI_PASS          CONFIG_ESP_WIFI_PASSWORD
@@ -57,6 +58,23 @@ HttpdBuiltInUrl cgiUrls[]={
     ROUTE_END()
 };
 
+void start_mdns_service()
+{
+    //initialize mDNS service
+    esp_err_t err = mdns_init();
+    if (err) {
+        printf("MDNS Init failed: %d\n", err);
+        return;
+    }
+
+    //set hostname
+    char *hostname = "lienka";
+    ESP_ERROR_CHECK( mdns_hostname_set(hostname));
+    ESP_LOGI(TAG, "mdns hostname set to: [%s]", hostname);
+    //set default instance
+    ESP_ERROR_CHECK( mdns_instance_name_set("Beebot Mdns") );
+    ESP_ERROR_CHECK( mdns_service_add(NULL, "_http", "_udp", 80, NULL, 0) );
+}
 
 void clearNVS()
 {
@@ -105,11 +123,13 @@ static esp_err_t s_event_handler(void *ctx, system_event_t *event)
     default:
         break;
     }
+    mdns_handle_system_event(ctx, event);
     return ESP_OK;
 }
 
 void wifi_init_sta(char * m_ssid, char * m_password)
 {
+    start_mdns_service();
     s_wifi_event_group = xEventGroupCreate();
 
     tcpip_adapter_init();
@@ -135,20 +155,20 @@ void wifi_init_sta(char * m_ssid, char * m_password)
 
 void setup_sta_mode(char *ssid,char *password)
 {
-        ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
-        wifi_init_sta(ssid,password);
-        // SET GPIO FOR STEPPER OUTPUT
-        initStepper();
-        // INIT HTTPD
-        espFsInit((void*)(webpages_espfs_start));
-        tcpip_adapter_init();
-        httpdFreertosInit(&httpdFreertosInstance,
-                          cgiUrls,
-                          LISTEN_PORT,
-                          connectionMemory,
-                          MAX_CONNECTIONS,
-                          HTTPD_FLAG_NONE);
-        httpdFreertosStart(&httpdFreertosInstance);
+    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+    wifi_init_sta(ssid,password);
+    // SET GPIO FOR STEPPER OUTPUT
+    initStepper();
+    // INIT HTTPD
+    espFsInit((void*)(webpages_espfs_start));
+    tcpip_adapter_init();
+    httpdFreertosInit(&httpdFreertosInstance,
+                        cgiUrls,
+                        LISTEN_PORT,
+                        connectionMemory,
+                        MAX_CONNECTIONS,
+                        HTTPD_FLAG_NONE);
+    httpdFreertosStart(&httpdFreertosInstance);
 }
 
 
