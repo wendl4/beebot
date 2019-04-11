@@ -59,7 +59,23 @@
 }
 
 .control:hover {
- border-style: solid;
- border-width: 3px;
- border-color: rgba(0, 0, 0, 0);
+  border-style: solid;
+  border-width: 3px;
+  border-color: rgba(0, 0, 0, 0);
+}
+
+#tile-board {
+  background-color: blue;
+  padding: 40px 0 20px 0;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+
+  -webkit-box-shadow: -1px 10px 16px 0px rgba(0,0,0,0.71);
+  -moz-box-shadow: -1px 10px 16px 0px rgba(0,0,0,0.71);
+  box-shadow: -1px 10px 16px 0px rgba(0,0,0,0.71);
+}
+
+#send-button {
+  margin-top: 20px;
 }

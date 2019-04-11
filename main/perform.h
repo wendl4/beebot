@@ -5,7 +5,11 @@ enum CmdType {
     StepperFwd,
     StepperBack,
     StepperRight,
-    StepperLeft
+    StepperLeft,
+    LeftBraces,
+    RightBraces,
+    TimesTwo,
+    TimesThree
 };
 
 typedef struct _Cmd {
@@ -24,6 +28,6 @@ typedef struct _Perform {
     int pc;
 } Perform;
 
-bool perform_step(Perform *p);
+void interpret(Perform *p,int pc);
 void prepair_program(char program[]);
 void show_cmd(Perform *p);
