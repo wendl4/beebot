@@ -59,6 +59,10 @@ CgiStatus ICACHE_FLASH_ATTR cgiSendSteps(HttpdConnData *connData) {
 	char steps[128];
 	httpdFindArg(connData->post.buff, "steps", steps, sizeof(steps));
 	printf("Steps -> %s \n", steps);
+	httpdStartResponse(connData, 200);
+	httpdHeader(connData, "Content-Type", "text/plain");
+	httpdEndHeaders(connData);
+	httpdSend(connData, "", 0);
 	prepair_program(steps);
 	return HTTPD_CGI_DONE;
 }

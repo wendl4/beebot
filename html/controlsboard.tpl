@@ -32,7 +32,9 @@
 
 
   <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
   <script src="js/controlsboard.js"></script>
+  <script src="js/parser.js"></script>
   <script src="js/bootstrap.min.js"></script>
 </body>
 
